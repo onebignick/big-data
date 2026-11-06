@@ -138,9 +138,9 @@ def update_rates(rows, batch_ts):
 def write_rates():
     if not state["rates"]:
         return
-    snap = [(RUN, d, v, n, l, 1e4 * l / n, state["max_ts"], time.time())
+    snap = [(d, v, n, l, 1e4 * l / n, state["max_ts"], time.time())
             for (d, v), (n, l) in state["rates"].items()]
-    (spark.createDataFrame(snap, "run string, dim string, value string, txns long, laundering long, "
+    (spark.createDataFrame(snap, "dim string, value string, txns long, laundering long, "
                                  "rate_bp double, as_of_event_ts string, updated_at double")
      .coalesce(1).write.mode("overwrite").parquet(f"{LAKE}/results/bq1_stream/rates/run={RUN}/"))
     state["last_rates"] = time.time()
