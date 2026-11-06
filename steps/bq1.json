@@ -1,0 +1,16 @@
+[
+ {
+  "Name": "P3 bq1_train",
+  "ActionOnFailure": "CONTINUE",
+  "Type": "CUSTOM_JAR",
+  "Jar": "command-runner.jar",
+  "Args": [
+   "spark-submit",
+   "--deploy-mode",
+   "cluster",
+   "s3://__BUCKET__/code/spark/bq1_train.py",
+   "__BUCKET__",
+   "hi-small"
+  ]
+ }
+]

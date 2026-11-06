@@ -1,0 +1,7 @@
+[
+  {"Name": "P5 stream", "ActionOnFailure": "CONTINUE", "Type": "CUSTOM_JAR", "Jar": "command-runner.jar",
+   "Args": ["spark-submit", "--deploy-mode", "client",
+            "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1",
+            "s3://__BUCKET__/code/spark/stream.py", "__BUCKET__", "__RUN__", "__TOPIC__", "__BOOTSTRAP__",
+            "__KTOPIC__", "hi-small", "__DAY__", "25", "120"]}
+]

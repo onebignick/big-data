@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars and fill in.
+alert_email = "you@example.com"   # SNS flag alerts + budget alerts
+
+# Public IPs allowed to open the hosted dashboard (check https://checkip.amazonaws.com)
+dashboard_cidrs = [
+  "203.0.113.10/32",
+]
+
+# expected_account_id = "123456789012"  # apply refuses to run in any other account

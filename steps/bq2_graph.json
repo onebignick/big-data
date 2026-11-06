@@ -1,0 +1,20 @@
+[
+ {
+  "Name": "P4 bq2_graph",
+  "ActionOnFailure": "CONTINUE",
+  "Type": "CUSTOM_JAR",
+  "Jar": "command-runner.jar",
+  "Args": [
+   "spark-submit",
+   "--deploy-mode",
+   "cluster",
+   "--packages",
+   "graphframes:graphframes:0.8.3-spark3.5-s_2.12",
+   "--repositories",
+   "https://repos.spark-packages.org",
+   "s3://__BUCKET__/code/spark/bq2_graph.py",
+   "__BUCKET__",
+   "hi-small"
+  ]
+ }
+]

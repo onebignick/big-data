@@ -1,0 +1,103 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ViewPipelineSingapore",
+      "Effect": "Allow",
+      "Action": [
+        "glue:Get*",
+        "glue:List*",
+        "glue:BatchGet*",
+        "glue:SearchTables",
+        "athena:Get*",
+        "athena:List*",
+        "athena:BatchGet*",
+        "elasticmapreduce:Describe*",
+        "elasticmapreduce:List*",
+        "elasticmapreduce:View*",
+        "kinesis:Describe*",
+        "kinesis:List*",
+        "lambda:Get*",
+        "lambda:List*",
+        "sns:Get*",
+        "sns:List*",
+        "logs:Describe*",
+        "logs:Get*",
+        "logs:FilterLogEvents",
+        "logs:StartQuery",
+        "logs:GetQueryResults",
+        "cloudwatch:Get*",
+        "cloudwatch:List*",
+        "cloudwatch:Describe*",
+        "cloudformation:Describe*",
+        "cloudformation:List*",
+        "kafka:Describe*",
+        "kafka:List*",
+        "kafka:Get*"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "ap-southeast-1"
+        }
+      }
+    },
+    {
+      "Sid": "RunAthenaQueriesInProjectWorkgroup",
+      "Effect": "Allow",
+      "Action": [
+        "athena:StartQueryExecution",
+        "athena:StopQueryExecution"
+      ],
+      "Resource": "arn:aws:athena:ap-southeast-1:129712841435:workgroup/bda8-aml"
+    },
+    {
+      "Sid": "ListBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadLake",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject",
+        "s3:GetBucketVersioning",
+        "s3:GetLifecycleConfiguration"
+      ],
+      "Resource": [
+        "arn:aws:s3:::bda8-aml-lake-129712841435",
+        "arn:aws:s3:::bda8-aml-lake-129712841435/*"
+      ]
+    },
+    {
+      "Sid": "WriteOwnAthenaResultsOnly",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:AbortMultipartUpload"
+      ],
+      "Resource": "arn:aws:s3:::bda8-aml-lake-129712841435/athena-results/*"
+    },
+    {
+      "Sid": "SeeBudget",
+      "Effect": "Allow",
+      "Action": [
+        "budgets:ViewBudget"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "InvokeReplayLambda",
+      "Effect": "Allow",
+      "Action": [
+        "lambda:InvokeFunction"
+      ],
+      "Resource": "arn:aws:lambda:ap-southeast-1:129712841435:function:bda8-aml-replay"
+    }
+  ]
+}
