@@ -7,3 +7,7 @@ dashboard_cidrs = [
 ]
 
 # expected_account_id = "123456789012"  # apply refuses to run in any other account
+
+# cost switches: true = running, false = torn down (data lake is kept either way)
+# kafka_enabled     = true
+# dashboard_enabled = true

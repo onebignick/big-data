@@ -69,4 +69,4 @@ bin/run-stream.sh 2022-09-08 900                        # P5: replay one day thr
 aws glue start-crawler --name bda8-aml-results          # P6: catalog results for Athena / Streamlit
 ```
 
-Tear down: `terraform destroy` (empty the bucket first). Kafka costs ~$0.09/h while it exists.
+Save costs between runs: set `kafka_enabled = false` and `dashboard_enabled = false` in terraform.tfvars and apply (the lake stays). Full tear down: `terraform destroy` (empty the bucket first).

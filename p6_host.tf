@@ -8,6 +8,12 @@ variable "dashboard_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "dashboard_enabled" {
+  description = "Run the dashboard instance (~$0.02/h). false = torn down."
+  type        = bool
+  default     = true
+}
+
 variable "dashboard_instance_type" {
   type    = string
   default = "t3.small"
@@ -104,6 +110,7 @@ resource "aws_security_group" "dashboard" {
 }
 
 resource "aws_instance" "dashboard" {
+  count                       = var.dashboard_enabled ? 1 : 0
   ami                         = data.aws_ami.al2023.id
   instance_type               = var.dashboard_instance_type
   subnet_id                   = data.aws_subnet.emr.id
@@ -158,7 +165,7 @@ resource "aws_instance" "dashboard" {
 }
 
 output "dashboard_url" {
-  value = "http://${aws_instance.dashboard.public_ip}:8501"
+  value = var.dashboard_enabled ? "http://${aws_instance.dashboard[0].public_ip}:8501" : "dashboard disabled (set dashboard_enabled = true)"
 }
 
 output "dashboard_password" {

@@ -7,6 +7,12 @@
 #                         --> BQ2 scoring + flags + SNS     (results/stream_scored/, results/flags/)
 #                         --> raw archive into the lake     (landing/<dataset>/stream/dt=...)
 
+variable "kafka_enabled" {
+  description = "Run the MSK cluster (~$0.09/h). false = torn down; apply true again before a stream run (~30 min)."
+  type        = bool
+  default     = true
+}
+
 variable "kafka_topic" {
   type    = string
   default = "aml-raw-txn"
@@ -80,6 +86,7 @@ resource "aws_msk_configuration" "aml" {
 }
 
 resource "aws_msk_cluster" "aml" {
+  count                  = var.kafka_enabled ? 1 : 0
   cluster_name           = "${local.name}-kafka"
   kafka_version          = "3.9.x"
   number_of_broker_nodes = 2
@@ -185,7 +192,7 @@ resource "aws_lambda_function" "replay" {
     variables = {
       BUCKET    = aws_s3_bucket.lake.bucket
       RAW_KEY   = "landing/${var.dataset}/transactions/HI-Small_Trans.csv"
-      BOOTSTRAP = aws_msk_cluster.aml.bootstrap_brokers
+      BOOTSTRAP = var.kafka_enabled ? aws_msk_cluster.aml[0].bootstrap_brokers : "kafka-disabled:9092"
       TOPIC     = var.kafka_topic
     }
   }
@@ -226,7 +233,7 @@ resource "aws_glue_catalog_table" "landing_stream_raw" {
 }
 
 output "kafka_bootstrap" {
-  value = aws_msk_cluster.aml.bootstrap_brokers
+  value = var.kafka_enabled ? aws_msk_cluster.aml[0].bootstrap_brokers : "kafka disabled (set kafka_enabled = true)"
 }
 
 output "kafka_topic" {
