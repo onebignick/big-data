@@ -60,7 +60,7 @@ Serving: Athena views (sql/bq1_views.sql) + Streamlit (app/), hosted on EC2 behi
 ```bash
 cp terraform.tfvars.example terraform.tfvars   # fill in
 bin/build-lambda.sh                            # vendors kafka-python for the replay Lambda
-terraform init && terraform apply
+terraform init && terraform apply                # Terraform >= 1.10; state is shared in s3://bda8-aml-tfstate-129712841435 (S3 lockfile)
 # upload HI-Small_Trans.csv / HI-Small_Patterns.txt to landing/hi-small/{transactions,patterns}/
 aws glue start-job-run --job-name bda8-aml-curate        # P2
 bin/emr-run.sh batch steps/batch.json                   # P3 (BQ1 models) + P4 (BQ2 graph)

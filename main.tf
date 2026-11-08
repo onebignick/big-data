@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.9"
+  required_version = ">= 1.10" # use_lockfile on the S3 backend needs 1.10+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -14,7 +14,14 @@ terraform {
       version = "~> 3.6"
     }
   }
-  # Local state for now (gitignored). Move to an S3 backend once the lake bucket exists if the team needs shared state.
+  # Shared state: private, versioned bucket (created outside Terraform). Credentials come from the
+  # usual AWS chain (AWS_PROFILE / default profile), so each teammate uses their own profile.
+  backend "s3" {
+    bucket       = "bda8-aml-tfstate-129712841435"
+    key          = "bda8-aml/terraform.tfstate"
+    region       = "ap-southeast-1"
+    use_lockfile = true
+  }
 }
 
 provider "aws" {

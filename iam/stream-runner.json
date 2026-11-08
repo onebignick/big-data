@@ -1,0 +1,108 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LaunchProjectEmrClustersOnly",
+      "Effect": "Allow",
+      "Action": [
+        "elasticmapreduce:RunJobFlow",
+        "elasticmapreduce:AddTags"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "ap-southeast-1",
+          "aws:RequestTag/project": "bda8-aml"
+        }
+      }
+    },
+    {
+      "Sid": "ManageProjectEmrClustersOnly",
+      "Effect": "Allow",
+      "Action": [
+        "elasticmapreduce:DescribeCluster",
+        "elasticmapreduce:ListSteps",
+        "elasticmapreduce:DescribeStep",
+        "elasticmapreduce:TerminateJobFlows"
+      ],
+      "Resource": "arn:aws:elasticmapreduce:ap-southeast-1:129712841435:cluster/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:ResourceTag/project": "bda8-aml"
+        }
+      }
+    },
+    {
+      "Sid": "PassOnlyTheProjectEmrRoles",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": [
+        "arn:aws:iam::129712841435:role/bda8-aml-emr-service",
+        "arn:aws:iam::129712841435:role/bda8-aml-emr-ec2"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "elasticmapreduce.amazonaws.com"
+        }
+      }
+    },
+    {
+      "Sid": "RunResultsCrawler",
+      "Effect": "Allow",
+      "Action": "glue:StartCrawler",
+      "Resource": "arn:aws:glue:ap-southeast-1:129712841435:crawler/bda8-aml-results"
+    },
+    {
+      "Sid": "SubscribeToFlagAlerts",
+      "Effect": "Allow",
+      "Action": "sns:Subscribe",
+      "Resource": "arn:aws:sns:ap-southeast-1:129712841435:bda8-aml-flags"
+    },
+    {
+      "Sid": "LookUpDashboardIp",
+      "Effect": "Allow",
+      "Action": "ec2:DescribeInstances",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestedRegion": "ap-southeast-1"
+        }
+      }
+    },
+    {
+      "Sid": "ManageOwnAccessKeys",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateAccessKey",
+        "iam:ListAccessKeys",
+        "iam:UpdateAccessKey",
+        "iam:DeleteAccessKey"
+      ],
+      "Resource": "arn:aws:iam::129712841435:user/${aws:username}"
+    },
+    {
+      "Sid": "ReadOwnUserForConsole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:GetUser",
+        "iam:GetLoginProfile",
+        "iam:ListMFADevices",
+        "iam:ListSigningCertificates",
+        "iam:ListSSHPublicKeys",
+        "iam:ListServiceSpecificCredentials",
+        "iam:GetAccessKeyLastUsed",
+        "iam:ListGroupsForUser",
+        "iam:ListAttachedUserPolicies",
+        "iam:ListUserPolicies",
+        "iam:ListUserTags"
+      ],
+      "Resource": "arn:aws:iam::129712841435:user/${aws:username}"
+    },
+    {
+      "Sid": "ListUsersPage",
+      "Effect": "Allow",
+      "Action": "iam:ListUsers",
+      "Resource": "*"
+    }
+  ]
+}
