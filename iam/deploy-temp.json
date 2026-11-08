@@ -1,0 +1,60 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PowerUserUntilExpiry",
+      "Effect": "Allow",
+      "NotAction": ["iam:*", "organizations:*", "account:*"],
+      "Resource": "*",
+      "Condition": {"DateLessThan": {"aws:CurrentTime": "2026-11-11T13:00:00Z"}}
+    },
+    {
+      "Sid": "PowerUserIamReadsUntilExpiry",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateServiceLinkedRole",
+        "iam:DeleteServiceLinkedRole",
+        "iam:ListRoles",
+        "iam:ListInstanceProfiles",
+        "iam:ListPolicies",
+        "iam:GetPolicy",
+        "iam:GetPolicyVersion",
+        "organizations:DescribeOrganization",
+        "account:ListRegions",
+        "account:GetAccountInformation"
+      ],
+      "Resource": "*",
+      "Condition": {"DateLessThan": {"aws:CurrentTime": "2026-11-11T13:00:00Z"}}
+    },
+    {
+      "Sid": "ManageProjectRolesUntilExpiry",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole", "iam:DeleteRole", "iam:GetRole", "iam:UpdateRole", "iam:UpdateRoleDescription",
+        "iam:UpdateAssumeRolePolicy", "iam:TagRole", "iam:UntagRole", "iam:ListRoleTags",
+        "iam:PutRolePolicy", "iam:GetRolePolicy", "iam:DeleteRolePolicy", "iam:ListRolePolicies",
+        "iam:AttachRolePolicy", "iam:DetachRolePolicy", "iam:ListAttachedRolePolicies",
+        "iam:ListInstanceProfilesForRole",
+        "iam:CreateInstanceProfile", "iam:DeleteInstanceProfile", "iam:GetInstanceProfile",
+        "iam:AddRoleToInstanceProfile", "iam:RemoveRoleFromInstanceProfile",
+        "iam:TagInstanceProfile", "iam:UntagInstanceProfile", "iam:ListInstanceProfileTags",
+        "iam:PassRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::129712841435:role/bda8-aml-*",
+        "arn:aws:iam::129712841435:instance-profile/bda8-aml-*"
+      ],
+      "Condition": {"DateLessThan": {"aws:CurrentTime": "2026-11-11T13:00:00Z"}}
+    },
+    {
+      "Sid": "SingaporeOnly",
+      "Effect": "Deny",
+      "NotAction": [
+        "iam:*", "sts:*", "budgets:*", "ce:*", "cur:*", "organizations:*", "account:*",
+        "support:*", "health:*", "cloudfront:*", "route53:*", "s3:ListAllMyBuckets", "s3:GetBucketLocation"
+      ],
+      "Resource": "*",
+      "Condition": {"StringNotEquals": {"aws:RequestedRegion": "ap-southeast-1"}}
+    }
+  ]
+}
